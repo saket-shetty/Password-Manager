@@ -1,16 +1,11 @@
-# pass_manager
+# Secure Password Manager
 
-A new Flutter project.
+Apk Link: https://drive.google.com/open?id=1PNCy3aiBLrbNwPOk_sQV7a6uWEqy7b55
 
-## Getting Started
+Created a Password Manager using flutter and firebase the data is encrypted with user private key and global public key.
 
-This project is a starting point for a Flutter application.
+Users can login with Google or facebook and will be redirect to new page here they will enter the private key and the data will only be decrypted using that private key.
 
-A few resources to get you started if this is your first Flutter project:
+User can also update the data previously entered.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Any query: shettysaket05@gmail.com
