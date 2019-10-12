@@ -10,15 +10,18 @@ User can also update the data previously entered and access their data even if t
 
 <table>
   <tr>
-    <td><img src="screenshot/login.jpg" width="180" height="300"></td>
-     <td><img src="screenshot/fblogin.jpg" width="180" height="300"></td>
-     <td><img src="screenshot/privatekey.jpg" width="180" height="300"></td>
+    <td><img src="screenshot/login.jpg" width="225" height="360"></td>
+     <td><img src="screenshot/fblogin.jpg" width="225" height="360"></td>
+     <td><img src="screenshot/privatekey.jpg" width="225" height="360"></td>
   </tr>
   <tr>
-     <td><img src="screenshot/submit.jpg" width="180" height="300"></td>
-     <td><img src="screenshot/updatepage.jpg" width="180" height="300"></td>
-     <td><img src="screenshot/offlinepage.jpg" width="180" height="300"></td>
+     <td><img src="screenshot/submit.jpg" width="225" height="360"></td>
+     <td><img src="screenshot/mainpage.jpg" width="225" height="360"></td>
+     <td><img src="screenshot/updatepage.jpg" width="225" height="360"></td>
    </tr>
+  <tr>
+     <td><img src="screenshot/offlinepage.jpg" width="225" height="360"></td>
+  </tr>
 </table>
 
 Any query: shettysaket05@gmail.com
