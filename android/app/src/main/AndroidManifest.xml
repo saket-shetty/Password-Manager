@@ -12,7 +12,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="pass_manager"
+        android:label="Secure Store"
         android:icon="@mipmap/ic_launcher">
 
         <activity

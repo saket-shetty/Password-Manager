@@ -4,10 +4,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pass_manager/login.dart';
+import 'package:pass_manager/offlinepage.dart';
 import 'package:pass_manager/submitpage.dart';
 import 'package:pass_manager/updatepage.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:line_icons/line_icons.dart';
+import 'dart:convert' as JSON;
 
 
 class homepage extends StatefulWidget {
@@ -36,9 +38,13 @@ class _homepageState extends State<homepage> {
   //This will get all the user data and store it into the constructor
   Future get_all_data() async{
     var _privateKey = await store.read(key: 'privatekey');
+
     var _publicKey;
     ref.child('publickey').once().then((DataSnapshot snap) async{
       _publicKey = await snap.value;
+
+      await store.write(key: 'publickey', value: '$_publicKey');
+
       setState(() async{
 
         final String encryptkey = await cryptor.generateKeyFromPassword(_publicKey, _privateKey);
@@ -66,38 +72,47 @@ class _homepageState extends State<homepage> {
                       newdomain,
                       newpassword,
                       x
-                      );
+                    );
 
                     //The Snapshot value is been sotred in the constructor
                     //since we need all the value is single index
                     allData.add(newdata);
-                    setState(() {
-                      
-                    });
+                    setState(() {});
                   });
                 }
-                
               });
             });
           });
         }
-
         else{
           //If the user id is not retrieved it will call the function again #shittycode
           get_all_data();
         }
       });
     });
+  }
 
-
-
- 
+  Future delay() async{
+    var newkeylist = []; 
+    Future.delayed(const Duration(seconds: 5), () {
+      setState(() {
+        ref.child('$_userid').once().then((DataSnapshot snap) async{
+          print('snap :${JSON.jsonEncode(snap.value)}');
+          var newkeys = snap.value.keys;
+          for(var x in newkeys){
+            newkeylist.add(x);
+          }
+          await store.write(key: 'offline-data', value: '${JSON.jsonEncode(snap.value)}');
+          await store.write(key: 'offline-key', value: '${JSON.jsonEncode(newkeylist)}');
+        });
+      });
+    });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     get_all_data();
+    delay();
     super.initState();
   }
 
@@ -124,14 +139,6 @@ class _homepageState extends State<homepage> {
     await store.write(key: 'msg-email', value: '$email');
     await store.write(key: 'msg-password', value: '$password');
     await store.write(key: 'msg-timestamp', value: '$timestamp');
-  }
-
-
-  Future get_publicKey() async{
-    ref.child('publickey').once().then((DataSnapshot snap){
-      var key = snap.value;
- 
-    });
   }
 
 
@@ -221,7 +228,7 @@ class _homepageState extends State<homepage> {
                 new Text('Email: $email',
                   style: new TextStyle(
                     color: Colors.white,
-                    fontSize: 15.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.w300
                   ),
                 ),
@@ -231,7 +238,7 @@ class _homepageState extends State<homepage> {
                 new Text('Password: $password',
                   style: new TextStyle(
                     color: Colors.white,
-                    fontSize: 15.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.w300
                   ),
                 ),

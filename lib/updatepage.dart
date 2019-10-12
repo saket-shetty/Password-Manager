@@ -110,12 +110,12 @@ class _updatedataState extends State<updatedata> {
                 Updatedata();
               },
               child: new Container(
-                color: Colors.deepPurpleAccent,
+                color: Colors.black,
                 width: 100,
                 height: 50,
                 child: Center(
                   child: new Text(
-                    'Submit',
+                    'Update',
                     style: new TextStyle(
                       fontWeight: FontWeight.w300,
                       color: Colors.white

@@ -8,7 +8,9 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as JSON;
 import 'package:flutter_string_encryption/flutter_string_encryption.dart';
+import 'package:pass_manager/offlinepage.dart';
 import 'package:pass_manager/privatekey.dart';
+import 'package:connectivity/connectivity.dart';
 
 class login extends StatefulWidget {
   @override
@@ -117,10 +119,15 @@ class _loginState extends State<login> {
   //If an id exist it will navigate to the hompage 
   //If no id exist it will stays to the login page
   Future get_user_id() async{
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
     var userid = await store.read(key: 'user-id');
     var _privatekey = await store.read(key: 'privatekey');
-    if(userid != null && _privatekey !=null){
+    if(userid != null && _privatekey !=null && (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi)){
       Navigator.push(context, MaterialPageRoute(builder: (context)=>homepage()));    
+    }
+    else if(userid != null && _privatekey !=null && (connectivityResult != ConnectivityResult.mobile || connectivityResult != ConnectivityResult.wifi)){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>offlinepage()));
     }
   }
 

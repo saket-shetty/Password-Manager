@@ -42,12 +42,29 @@ class _privatePageState extends State<privatePage> {
               validator: (val) => val.length < 1 ? 'length should be 8' : null,
             ),
 
-            new FlatButton(
+            new Padding(
+              padding: new EdgeInsets.all(15.0),
+            ),
+
+            new MaterialButton(
               onPressed: (){
                 saveData();
               },
-              child: new Text('Save'),
-            )
+              child: new Container(
+                color: Colors.black,
+                width: 100,
+                height: 50,
+                child: Center(
+                  child: new Text(
+                    'Save',
+                    style: new TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
