@@ -7,7 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as JSON;
-import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:pass_manager/offlinepage.dart';
 import 'package:pass_manager/privatekey.dart';
 import 'package:connectivity/connectivity.dart';
@@ -21,26 +20,22 @@ class _loginState extends State<login> {
 
   // Firebase auth used to show the number of user logged in and using which domain in firebase console 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final GoogleSignIn googleSignIn = new GoogleSignIn();
   //Flutter Secure Store is same as the Shared Preference but much faster and store credentials securely
   //It will store the user id and acts as session so that user doesnot have to login again and again
   final FlutterSecureStorage store = new FlutterSecureStorage();
 
   //Google SignIn starts here
   Future<FirebaseUser> _LoginInGoogle() async {
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
+    store.deleteAll();
+    GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
     var _privatekey = await store.read(key: 'privatekey');
-
-
     //Here the credentials have been checked and the user will be displayed in the firebase console.
     final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
+      accessToken: gSA.accessToken,
+      idToken: gSA.idToken,
     );
-
     //Once the user successfully signedin the user will be Navigated to the homepage
     if(_privatekey !=null){
       Navigator.push(context, MaterialPageRoute(builder: (context)=>homepage()));
@@ -48,46 +43,33 @@ class _loginState extends State<login> {
     else{
       Navigator.push(context, MaterialPageRoute(builder: (context)=>privatePage()));
     }
-
-
     final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
-
     //user id is been stored here tocreate a session
     //Also this data is been used to store the user data since Id is unique for everyone.
-    await store.write(key: 'user-id', value: '${googleUser.id}');
-
+    await store.write(key: 'user-id', value: '${googleSignInAccount.id}');
     return user;
   }
   //Google Signin Ends here
 
   //Twitter signin starts here
-  Future _loginWithFB() async{
-    FacebookLogin fbLogin  = new FacebookLogin();
-
-    var _privatekey = await store.read(key: 'privatekey');
-
-
-    // Open facebook page so that user can login 
-    final result = await fbLogin.logInWithReadPermissions(['email', 'public_profile']);
-
+  Future<FirebaseUser> _loginWithFB() async {
+    store.deleteAll();
+    FacebookLogin fbLogin = new FacebookLogin();
+    // Open facebook page so that user can login
+    final result = await fbLogin.logIn(['email', 'public_profile']);
     switch (result.status) {
-
       //If user successfully loggedin the user data will be returned
       case FacebookLoginStatus.loggedIn:
-
         //user token will be returned here
         final token = result.accessToken.token;
-
-        //The returned token will be accessed here to get the user data into json format 
-        final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
-        
+        //The returned token will be accessed here to get the user data into json format
+        final graphResponse = await http.get(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
         //The json will be decoded here
         final profile = JSON.jsonDecode(graphResponse.body);
-
-        //User profile id will be stored here so that it can be accessd to store the user data 
+        print(profile['id']);
+        var _privatekey = await store.read(key: 'privatekey');
         await store.write(key: 'user-id', value: '${profile['id']}');
-
-        //navigate to the homepage once the user is authenticated
         if(_privatekey !=null){
           Navigator.push(context, MaterialPageRoute(builder: (context)=>homepage()));
         }
@@ -95,32 +77,20 @@ class _loginState extends State<login> {
           Navigator.push(context, MaterialPageRoute(builder: (context)=>privatePage()));
         }
         break;
-
       case FacebookLoginStatus.cancelledByUser:
-        print('some error');
+        throw("Some Error");
         break;
-
       case FacebookLoginStatus.error:
-        print('some error');
+        throw("Some Error");
         break;
     }
   }
-
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    get_user_id();
-    super.initState();
-  }
-
 
   //Here the FlutterSecureStore will check the previously stored id
   //If an id exist it will navigate to the hompage 
   //If no id exist it will stays to the login page
   Future get_user_id() async{
     var connectivityResult = await (Connectivity().checkConnectivity());
-
     var userid = await store.read(key: 'user-id');
     var _privatekey = await store.read(key: 'privatekey');
     if(userid != null && _privatekey !=null && (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi)){
@@ -129,6 +99,14 @@ class _loginState extends State<login> {
     else if(userid != null && _privatekey !=null && (connectivityResult != ConnectivityResult.mobile || connectivityResult != ConnectivityResult.wifi)){
       Navigator.push(context, MaterialPageRoute(builder: (context)=>offlinepage()));
     }
+  }
+
+  @override
+  void initState() {
+    print("Init state called");
+    // TODO: implement initState
+    get_user_id();
+    super.initState();
   }
 
 

@@ -3,11 +3,11 @@
     <string name="app_name">secure store</string>
 
     <!-- Replace "000000000000" with your Facebook App ID here. -->
-    <string name="facebook_app_id">471669360228415</string>
+    <string name="facebook_app_id">584700339122817</string>
 
     <!--
       Replace "000000000000" with your Facebook App ID here.
       **NOTE**: The scheme needs to start with `fb` and then your ID.
     -->
-    <string name="fb_login_protocol_scheme">fb471669360228415</string>
+    <string name="fb_login_protocol_scheme">fb584700339122817</string>
 </resources>

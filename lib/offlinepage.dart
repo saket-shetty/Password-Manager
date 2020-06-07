@@ -29,8 +29,6 @@ class _offlinepageState extends State<offlinepage> {
     super.initState();
   }
 
-
-
   //OFFLINE DATA CODE HERE
 
   Future get_offline_data() async{

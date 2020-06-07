@@ -1,6 +1,6 @@
 # Secure Password Manager
 
-Apk Link: https://drive.google.com/open?id=1PNCy3aiBLrbNwPOk_sQV7a6uWEqy7b55
+- [Android](https://github.com/saket-shetty/Post-it/raw/master/build/app/outputs/apk/release/app-release.apk)
 
 Created a Password Manager using flutter and firebase the data is encrypted with user private key and global public key.
 
